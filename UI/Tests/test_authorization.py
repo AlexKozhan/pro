@@ -10,6 +10,7 @@ from logger import logger
 
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.smoke
+@pytest.mark.UI
 def test_login_success(driver):
     """Test login successfully"""
     lp = LoginPage(driver)
@@ -22,6 +23,7 @@ def test_login_success(driver):
 
 @allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.critical
+@pytest.mark.UI
 def test_login_invalid_email(driver):
     """Test login with incorrect email"""
     lp = LoginPage(driver)
@@ -32,6 +34,7 @@ def test_login_invalid_email(driver):
 
 @allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.critical
+@pytest.mark.UI
 def test_login_invalid_password(driver):
     """Test login with incorrect password"""
     lp = LoginPage(driver)
@@ -43,6 +46,7 @@ def test_login_invalid_password(driver):
 
 @allure.severity(allure.severity_level.MINOR)
 @pytest.mark.extended
+@pytest.mark.UI
 def test_login_without_cred(driver):
     """Test login without entering credentials"""
     lp = LoginPage(driver)
@@ -54,6 +58,7 @@ def test_login_without_cred(driver):
 
 @allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.smoke
+@pytest.mark.UI
 def test_logout_success(driver, login_user):
     """Test logout successfully"""
     clp = ContactListPage(driver)

@@ -8,6 +8,7 @@ from logger import logger
 
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.critical
+@pytest.mark.UI
 def test_successful_sign_up(driver, unique_email):
     """TC006: Check successful sign up for
     user with valid data"""
@@ -25,6 +26,7 @@ def test_successful_sign_up(driver, unique_email):
 
 @allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.smoke
+@pytest.mark.UI
 def test_invalid_data_sign_up(driver):
     """TC007: Check sign up for user with invalid data"""
     driver.get("https://thinking-tester-con"
@@ -47,6 +49,7 @@ def test_invalid_data_sign_up(driver):
 
 @allure.severity(allure.severity_level.NORMAL)
 @pytest.mark.smoke
+@pytest.mark.UI
 def test_existing_email_sign_up(driver, existing_email):
     """TC008: Check sign up for user with an existing email"""
     driver.get("https://thinking-tester-cont"
@@ -64,6 +67,7 @@ def test_existing_email_sign_up(driver, existing_email):
 
 @allure.severity(allure.severity_level.MINOR)
 @pytest.mark.smoke
+@pytest.mark.UI
 def test_empty_fields_sign_up(driver):
     """TC009: Check sign up for user with empty fields"""
     driver.get("https://thinking-tester-cont"
@@ -84,6 +88,7 @@ def test_empty_fields_sign_up(driver):
 
 @allure.severity(allure.severity_level.MINOR)
 @pytest.mark.extended
+@pytest.mark.UI
 def test_cancel_sign_up(driver):
     """TC010: Check cancellation of sign-up process"""
     driver.get("https://thinking-tester-contact-list.herokuapp.com/addUser")

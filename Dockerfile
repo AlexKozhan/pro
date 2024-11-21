@@ -2,29 +2,35 @@ FROM jenkins/jenkins:latest
 
 USER root
 
-# Установка необходимых пакетов
-RUN apt-get update && \
-    apt-get install -y python3-pip python3-venv wget curl unzip gnupg
+<<<<<<< HEAD
 
-# Добавление официального ключа и репозитория Google Chrome
-RUN curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
-    apt-get update
+=======
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-venv \
+    xvfb \
+    wget \
+    unzip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Установка последней версии Google Chrome
-RUN apt-get install -y google-chrome-stable
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 
-# Установка подходящей версии ChromeDriver
-RUN wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/128.0.6613.84/linux64/chromedriver-linux64.zip && \
-    unzip /tmp/chromedriver.zip -d /usr/local/bin/ && \
-    rm /tmp/chromedriver.zip
+ARG CHROME_VERSION="128.0.6613.84"
+RUN apt-get update \
+    && apt-get install -y google-chrome-stable=${CHROME_VERSION}-1 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Установка Allure Commandline
-RUN wget -qO- https://github.com/allure-framework/allure2/releases/download/2.17.3/allure-2.17.3.tgz | tar -xz -C /opt/ && \
-    ln -s /opt/allure-2.17.3/bin/allure /usr/bin/allure
+RUN wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chromedriver-linux64.zip \
+  && unzip /tmp/chromedriver.zip -d /usr/local/bin/ \
+  && rm /tmp/chromedriver.zip
 
-# Очистка
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ARG ALLURE_VERSION="2.17.3"
+RUN wget -qO- https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz | tar -xz -C /opt/ && \
+    ln -s /opt/allure-${ALLURE_VERSION}/bin/allure /usr/bin/allure
 
-# Возвращаемся к пользователю Jenkins
 USER jenkins
+>>>>>>> origin/main
