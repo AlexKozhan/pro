@@ -42,7 +42,7 @@ def test_login_invalid_email(page):
     """Test login with incorrect email"""
     login_page = LoginPage(page)
     login_page.login("invalid@example.com", PASSWORD)
-
+    page.wait_for_load_state("domcontentloaded", timeout=10000)
     assert login_page.is_error_message_visible(), "Error message not visible"
     logger.info("Test login with incorrect email successfully complete")
 

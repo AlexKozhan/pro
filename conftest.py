@@ -119,3 +119,10 @@ def pytest_runtest_makereport(item):
 
     if test_result.when in ["setup", "call"]:
         xfail = hasattr(test_result, 'wasxfail')
+
+
+
+@pytest.fixture(scope="session")
+def existing_email():
+    """Fixture to provide an existing email for testing"""
+    return "john.doe112111@example.com"

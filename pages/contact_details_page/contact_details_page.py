@@ -1,5 +1,6 @@
 from playwright.sync_api import Page
 import logging
+from pages.base_page import BasePage
 from pages.contact_details_page.locators import EDIT_BUTTON, DELETE_BUTTON, RETURN_BUTTON, FIRST_NAME, LAST_NAME, \
     BIRTHDATE, EMAIL, PHONE, STREET1, STREET2, CITY, STATE_PROVINCE, POSTAL_CODE, COUNTRY
 
@@ -8,7 +9,7 @@ from pages.contact_details_page.locators import EDIT_BUTTON, DELETE_BUTTON, RETU
 logger = logging.getLogger(__name__)
 
 
-class ContactDetailsPage:
+class ContactDetailsPage(BasePage):
     """Class Contact Details Page"""
 
     def __init__(self, page: Page):
