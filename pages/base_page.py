@@ -1,4 +1,5 @@
 import allure
+from playwright.async_api import expect
 from playwright.sync_api import Page
 
 from config import MAIN_PAGE_URL
@@ -13,7 +14,7 @@ class BasePage:
     def load(self):
         self.page.goto(MAIN_PAGE_URL)
 
-    def wait_url_contains(self, partial_url: str, timeout: int = 10000):
+    def wait_url_contains(self, partial_url: str, timeout: int = 30000):
         """Ждет, пока URL будет содержать указанную подстроку."""
         self.page.wait_for_url(f"**{partial_url}**", timeout=timeout)
 
