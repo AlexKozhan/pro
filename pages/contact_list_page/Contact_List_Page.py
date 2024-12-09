@@ -15,10 +15,16 @@ class ContactListPage(BasePage):
         self.page = page
 
     def click_add_button(self):
-        """Click the 'Add' button."""
-        logger.info(f"Clicking add button using selector: {ADD_BUTTON}.")
-        add_button = self.page.locator(ADD_BUTTON)
-        add_button.click()
+        # Log before clicking the button
+        print("Attempting to click the add button")
+        # Assuming the add button has a specific selector
+        self.page.click("button#add-contact")
+        # Log after clicking the button
+        print("Clicked the add button")
+        # Wait for the page to load
+        self.page.wait_for_load_state('load')
+        # Wait for the URL to change to the expected one
+        self.page.wait_for_url("**/addContact", timeout=15000)
 
     def click_first_row(self):
         """Click the first row."""
@@ -138,3 +144,16 @@ class ContactListPage(BasePage):
         except Exception as e:
             logger.error(f"Contact did not disappear: {str(e)}")
             raise TimeoutError("Contact did not disappear within the specified timeout.")
+
+    def find_contact_by_name(self, first_name, last_name):
+        """
+        Finds a contact in the contact list by first name and last name.
+        Returns the row element if found, otherwise None.
+        """
+        rows = self.page.locator("table.contactTable tbody tr")
+        for i in range(rows.count()):
+            row = rows.nth(i)
+            full_name = row.locator("td.contactNameColumn").inner_text()
+            if full_name == f"{first_name} {last_name}":
+                return row
+        return None

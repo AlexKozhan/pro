@@ -1,5 +1,5 @@
 import pytest
-from API.random_data import generate_email, generate_string
+from API1.random_data import generate_email, generate_string
 from logger import logger
 from typing import Generator
 import json
@@ -81,10 +81,10 @@ def user_with_token(register_user, api_request_context: APIRequestContext):
     }
     logger.info(f"Logging in with body: {login_body}")
 
-    max_retries = 3
+    max_retries = 1
     for attempt in range(max_retries):
         response = api_request_context.post(
-            "/auth/login",
+            "/users/login",
             data=json.dumps(login_body),
             headers={"Content-Type": "application/json"},
             timeout=60000  # Increase timeout to 60 seconds

@@ -1,12 +1,12 @@
 """
-API tests to check the functionality of the contact list.
+API1 tests to check the functionality of the contact list.
 """
 import pytest
 import allure
-from API.random_data import generate_email, generate_string
-from API import test_data
+from API1.random_data import generate_email, generate_string
+from API1 import test_data
 from logger import logger
-from API.conftest import user_data
+from API1.conftest import user_data
 import json
 from playwright.sync_api import APIRequestContext
 
@@ -574,20 +574,26 @@ def test_login_user(api_request_context: APIRequestContext):
     logger.info("test login user successfully complete")
 
 
-@allure.severity(allure.severity_level.CRITICAL)
-@pytest.mark.smoke
-@pytest.mark.API
 def test_delete_user(api_request_context: APIRequestContext, user_with_token):
     """TC012: Successful delete user"""
     url = "/users/me"
 
+    # Log the token for debugging purposes
+    token = user_with_token['token']
+    logger.info(f"Using token: {token}")
+
     headers = {
-        "Authorization": f"Bearer {user_with_token['token']}",
+        "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
     }
 
     logger.info("Deleting user using correct authorization.")
     response = api_request_context.delete(url, headers=headers)
+
+    # Log response details for debugging
+    logger.info(f"Response status: {response.status}")
+    logger.info(f"Response body: {response.text()}")
+    logger.info(f"Response headers: {response.headers}")
 
     logger.info(f"Assert actual response code: {response.status} with expected: 200.")
     assert response.status == 200

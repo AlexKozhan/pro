@@ -8,6 +8,8 @@ from config import USERNAME, PASSWORD
 from pages.contact_list_page.Contact_List_Page import ContactListPage
 from pages.add_contact_page.add_contact_page import AddContactPage
 from pages.contact_details_page.contact_details_page import ContactDetailsPage
+from Test_data import test_data
+from logger import logger
 
 
 # Генерация уникального email
@@ -58,7 +60,7 @@ def create_browser_context(browser) -> None:
     context.close()
 
 
-# Фикстура для работы с API запросами
+# Фикстура для работы с API1 запросами
 @pytest.fixture(scope="session")
 def api_request_context(
         playwright: Playwright,
@@ -75,33 +77,40 @@ def api_request_context(
 def created_contact(page):
     """Fixture to create a contact in the UI."""
     login_page = LoginPage(page)
-    login_page.login(USERNAME, PASSWORD)
+    login_page.login(test_data.eml, test_data.psw)
 
     contact_list_page = ContactListPage(page)
     contact_list_page.click_add_button()
 
-    # Создание контакта
+    # Логируем текущий URL для отладки
+    logger.info(f"Current URL after clicking add button: {page.url}")
+
+    # Ждём загрузки страницы "Add Contact"
+    try:
+        page.wait_for_url(test_data.url_contain2, timeout=15000)  # Увеличиваем таймаут
+        logger.info("Navigated to the 'Add Contact' page successfully.")
+    except Exception as e:
+        logger.error(f"Failed to navigate to 'Add Contact' page. Current URL: {page.url}. Error: {e}")
+        raise
+
+    # Создаём контакт
     add_contact_page = AddContactPage(page)
     add_contact_page.add_contact(
-        first_name="John",
-        last_name="Doe",
-        birthdate="01-01-1990",
-        email="john.doe@example.com",
-        phone="123456789",
-        street="123 Main St",
-        city="New York",
-        state="NY",
-        postal_code="10001",
-        country="USA"
+        fn="John", ln="Doe", bd="01-01-1990",
+        eml1="john.doe@example.com", pn="123456789",
+        str1="123 Main St", ct="New York", stpr="NY",
+        pc="10001", cntr="USA"
     )
-    add_contact_page.wait_for_contact_to_appear()  # Подождем, пока контакт появится в списке
 
-    yield add_contact_page  # Возвращаем объект страницы для теста
+    # Логируем текущий URL после добавления контакта
+    logger.info(f"Current URL after adding contact: {page.url}")
 
-    # Удаляем контакт после теста
-    contact_details_page = ContactDetailsPage(page)
-    contact_details_page.click_delete_button()
-    contact_list_page.wait_for_contact_to_disappear()  # Убедимся, что контакт удален
+    # Возвращаемся на страницу списка контактов
+    page.goto(test_data.url1)
+    page.wait_for_url(test_data.url1, timeout=15000)  # Увеличиваем таймаут
+    logger.info("Returned to the contact list page successfully.")
+
+    return add_contact_page
 
 
 # Снимки экрана и HTML исходного кода при ошибках
