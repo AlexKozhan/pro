@@ -1,6 +1,7 @@
 from playwright.sync_api import Page
 import logging
 from pages.base_page import BasePage
+from pages.contact_details_page.contact_details_page import ContactDetailsPage
 from pages.contact_list_page.locators import ADD_BUTTON, FIRST_ROW, LOGOUT_BUTTON, ROW_NAME, ROW_BIRTHDATE, ROW_EMAIL, \
     ROW_PHONE, ROW_ADDRESS, ROW_CITY, ROW_COUNTRY, CONTACT_LIST
 
@@ -157,3 +158,38 @@ class ContactListPage(BasePage):
             if full_name == f"{first_name} {last_name}":
                 return row
         return None
+
+    def delete_contact(self, contact_name):
+        # Ищем строку с данным контактом на странице списка
+        row_locator = self.page.locator(f"tr.contactTableBodyRow:has-text('{contact_name}')")
+        row_locator.wait_for(state="visible", timeout=5000)  # Убедимся, что контакт видим
+        row_locator.click()  # Кликаем по строке с контактами, чтобы перейти на его страницу
+
+        # Создаем объект для страницы деталей контакта
+        cdp = ContactDetailsPage(self.page)
+
+        # Логируем начало процесса удаления
+        logger.info(f"Deleting the contact: {contact_name}...")
+
+        # Слушаем событие диалога и автоматически подтверждаем его
+        self.page.on('dialog', lambda dialog: dialog.accept())  # Подтверждаем удаление в диалоге
+
+        # Кликаем на кнопку "Delete Contact"
+        cdp.click_delete_button()
+
+        # Ожидаем, что контакт удалится (увеличьте время, если нужно)
+        self.page.wait_for_timeout(5000)  # Задержка для отладки (можно увеличить)
+
+        # Проверяем, что контакт исчез с текущей страницы (проверка на списке контактов)
+        row_locator = self.page.locator(f"tr.contactTableBodyRow:has-text('{contact_name}')")
+        try:
+            # Проверяем, что контакт исчез с страницы
+            row_locator.wait_for(state="detached", timeout=10000)  # Ожидаем, что элемент исчезнет с DOM
+            logger.info(f"Контакт {contact_name} успешно удален.")
+        except TimeoutError:
+            logger.error(f"Контакт {contact_name} не был удален!")
+            raise
+
+        # Проверяем, что страница вернулась на список контактов
+        assert self.page.url == "https://thinking-tester-contact-list.herokuapp.com/contactList", "Deletion failed!"
+

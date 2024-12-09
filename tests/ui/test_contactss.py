@@ -89,6 +89,8 @@ def test_add_contact(page):
         page.screenshot(path="contact_not_found_error.png")
         raise
 
+    contact_list_page = ContactListPage(page)
+    contact_list_page.delete_contact(contact_name)
 
 
 
@@ -97,10 +99,20 @@ def test_add_contact(page):
 @pytest.mark.UI
 def test_cancel_add_contact(page):
     """Test cancel add contact successfully"""
-    clp = ContactListPage(page)
-    clp.click_add_button()
+    login_page = LoginPage(page)
+    login_page.login(USERNAME, PASSWORD)
+    # Ждем окончания сетевой активности (если нужно)
+    page.wait_for_load_state("networkidle", timeout=10000)
+    # Последняя проверка на URL
+    assert page.url == "https://thinking-tester-contact-list.herokuapp.com/contactList", \
+        f"Expected URL: https://thinking-tester-contact-list.herokuapp.com/contactList, but got: {page.url}"
 
-    # Log current URL for debugging
+    # Клик по кнопке "Добавить контакт"
+    page.wait_for_selector("text='Add a New Contact'", timeout=5000)
+    page.click("text='Add a New Contact'")
+    page.wait_for_url("**/addContact", timeout=5000)
+
+
     logger.info(f"Current URL after clicking add button: {page.url}")
 
     # Check if the URL contains the expected substring
@@ -171,6 +183,8 @@ def test_edit_contact(page, created_contact):
         raise
 
     logger.info("Test edit contact successfully complete.")
+    contact_list_page = ContactListPage(page)
+    contact_list_page.delete_contact(updated_contact_name)
 
 
 @allure.severity(allure.severity_level.MINOR)
@@ -215,6 +229,8 @@ def test_cancel_edit_contact(page, created_contact):
 
     cdp.click_return_button()
     logger.info("Test cancel edit contact successfully complete")
+    contact_list_page = ContactListPage(page)
+    contact_list_page.delete_contact(contact_name1)  # Используем метод удаления контакта
 
 
 @allure.severity(allure.severity_level.CRITICAL)
