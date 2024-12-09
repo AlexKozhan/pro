@@ -10,6 +10,7 @@ from pages.add_contact_page.add_contact_page import AddContactPage
 from pages.contact_details_page.contact_details_page import ContactDetailsPage
 from Test_data import test_data
 from logger import logger
+from playwright.sync_api import sync_playwright
 
 
 # Генерация уникального email
@@ -41,10 +42,12 @@ def context(create_browser_context, browser: Browser, browser_context_args: dict
 
 # Фикстура для страницы
 @pytest.fixture(scope="function")
-def page(create_browser_context) -> Page:
-    context, page = create_browser_context  # Возвращаем пару (context, page)
-    yield page
-    page.close()
+def page():
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        yield page
+        browser.close()
 
 
 # Фикстура для создания контекста и авторизации
@@ -55,8 +58,9 @@ def create_browser_context(browser) -> None:
     page = context.new_page()
     login_page = LoginPage(page)
     login_page.login(USERNAME, PASSWORD)
-    context.storage_state(path="state.json")  # Сохраняем состояние
+
     yield context, page
+    context.storage_state(path="state.json")  # Сохраняем состояние
     context.close()
 
 
