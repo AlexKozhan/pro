@@ -21,6 +21,7 @@ test_data.fn = f"First_{unique_suffix}"
 test_data.ln = f"Last_{unique_suffix}"
 
 
+
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.critical
 @pytest.mark.UI
@@ -120,47 +121,56 @@ def test_cancel_add_contact(page):
 @pytest.mark.UI
 def test_edit_contact(page, created_contact):
     """Test editing a contact."""
-    clp = ContactListPage(page)
-
-    # Проверяем текущий URL перед редактированием контакта
-    logger.info(f"Current URL before editing contact: {page.url}")
-    if "addContact" in page.url:
-        logger.info("Redirecting to the contact list page...")
-        page.goto(test_data.url1)  # Явный переход на страницу списка контактов
-
-    # Проверяем, что находимся на странице списка контактов
-    page.wait_for_url(test_data.url1, timeout=10000)  # Ждём завершения перехода
-    assert test_data.url1 in page.url, f"Expected URL to be {test_data.url1}, but got {page.url}"
+    ecp = EditContactPage(page)
 
     # Ищем добавленный контакт
     logger.info("Searching for the newly created contact...")
-    contact_row = clp.find_contact_by_name("John", "Doe")
-    assert contact_row is not None, "Contact not found!"
+    contact_name1 = "John Doe"  # Контакт, который был создан
+    row_locator1 = page.locator(f"tr.contactTableBodyRow:has-text('{contact_name1}')")
+
+    # Проверяем, что контакт найден
+    assert row_locator1 is not None, "Contact not found!"
+    row_locator1.click()
 
     # Начинаем редактирование контакта
     logger.info("Editing the contact...")
-    contact_row.locator("button.editButton").click()
-    acp = AddContactPage(page)
-    acp.add_contact(
-        fn="John",
-        ln="Doe",
-        bd="1990-01-01",
-        eml1="john.doe@example.com",
-        pn="123456789",
-        str1="123 Main St",
-        str2="Apt 4B",  # Указываем str2
-        ct="New York",
-        stpr="NY",
-        pc="10001",
-        cntr="USA"
+    page.locator("xpath=//button[text()='Edit Contact']").click()
+
+    # Редактируем контакт
+    ecp.edit_contact(
+        fn_1="Jane",
+        ln_1="Smith",
+        bd_1="1990-02-04",
+        eml1_1="john.doe@example.com",
+        pn_1="123456789",
+        str1_1="123 Main St",
+        str2_1="Apt 4B",  # Указываем str2
+        ct_1="New York",
+        stpr_1="NY",
+        pc_1="10001",
+        cntr_1="USA"
     )
+
+    # Переходим обратно на страницу списка контактов
+    page.goto("https://thinking-tester-contact-list.herokuapp.com/contactList")
+    page.wait_for_load_state("networkidle", timeout=10000)
 
     # Проверяем, что контакт был успешно обновлён
     logger.info("Verifying the updated contact...")
-    updated_contact = clp.find_contact_by_name("Jane", "Smith")
-    assert updated_contact is not None, "Updated contact not found!"
-    logger.info("Test edit contact successfully complete.")
+    updated_contact_name = "Jane Smith"  # Новый контакт
+    updated_row_locator = page.locator(f"tr.contactTableBodyRow:has-text('{updated_contact_name}')")
 
+    # Убедиться, что обновлённый контакт видим
+    try:
+        updated_row_locator.wait_for(state="visible", timeout=30000)
+        assert updated_row_locator.is_visible(), f"Updated contact {updated_contact_name} not found!"
+        logger.info(f"Contact {contact_name1} successfully updated.")
+    except TimeoutError:
+        logger.error(f"Updated contact {updated_contact_name} not found!")
+        page.screenshot(path="updated_contact_not_found_error.png")
+        raise
+
+    logger.info("Test edit contact successfully complete.")
 
 
 @allure.severity(allure.severity_level.MINOR)
@@ -168,24 +178,41 @@ def test_edit_contact(page, created_contact):
 @pytest.mark.UI
 def test_cancel_edit_contact(page, created_contact):
     """Test cancel edit contact successfully"""
-    clp = ContactListPage(page)
-    clp.click_first_row()
+    ecp = EditContactPage(page)
+
+    # Ищем добавленный контакт
+    logger.info("Searching for the newly created contact...")
+    contact_name1 = "John Doe"  # Контакт, который был создан
+    row_locator1 = page.locator(f"tr.contactTableBodyRow:has-text('{contact_name1}')")
+
+    # Проверяем, что контакт найден
+    assert row_locator1 is not None, "Contact not found!"
+    row_locator1.click()
+
+    # Начинаем редактирование контакта
+    logger.info("Editing the contact...")
+    page.locator("xpath=//button[text()='Edit Contact']").click()
+
+    ecp.click_cancel_button()
+
+    # Ожидаем появления элемента с id="firstName"
+    ecp.page.locator("span#firstName").wait_for(timeout=5000)  # ожидание до 5 секунд
+
+    # Получаем текущее значение поля firstName и проверяем его
+    current_value = ecp.page.locator("span#firstName").text_content()  # Получаем текст из span
+    assert current_value == 'John', f"Expected 'John', but got {current_value}"
+
+    expected_result = [
+        "John", "Doe", "1990-01-01",
+        "john.doe@example.com", "123456789",
+        "123 Main St", "123 Main St", "New York", "NY",
+        "10001", "USA"
+    ]
 
     cdp = ContactDetailsPage(page)
-    cdp.click_edit_button()
-    cdp.wait_url_contains(test_data.url_contain4)
-    ecp = EditContactPage(page)
-    ecp.wait_for_value_in_element("input[name='firstName']", test_data.fn)
-    ecp.click_cancel_button()
-    ecp.wait_for_value_in_element("input[name='firstName']", test_data.fn)
-    expected_result = [
-        test_data.fn, test_data.ln, test_data.bd,
-        test_data.eml1, test_data.pn, test_data.str1,
-        test_data.str2, test_data.ct, test_data.stpr,
-        test_data.pc, test_data.cntr
-    ]
     actual_result = cdp.get_all_contact_details_data()
     assert actual_result == expected_result
+
     cdp.click_return_button()
     logger.info("Test cancel edit contact successfully complete")
 

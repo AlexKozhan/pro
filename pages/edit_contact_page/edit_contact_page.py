@@ -108,3 +108,16 @@ class EditContactPage(BasePage):
         self.edit_postal_code(pc_1)
         self.edit_country(cntr_1)
         self.click_submit_button()
+
+    def find_contact_by_name(self, first_name, last_name):
+        """
+        Finds a contact in the contact list by first name and last name.
+        Returns the row element if found, otherwise None.
+        """
+        rows = self.page.locator("table.contactTable tbody tr")
+        for i in range(rows.count()):
+            row = rows.nth(i)
+            full_name = row.locator("td.contactNameColumn").inner_text()
+            if full_name == f"{first_name} {last_name}":
+                return row
+        return None
