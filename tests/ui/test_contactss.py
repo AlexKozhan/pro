@@ -222,27 +222,56 @@ def test_cancel_edit_contact(page, created_contact):
 @pytest.mark.UI
 def test_delete_contact(page, created_contact):
     """Test delete contact successfully"""
-    lp = LoginPage(page)
-    lp.login(test_data.eml, test_data.psw)
-    assert test_data.url1 in page.url
 
-    clp = ContactListPage(page)
-    clp.click_add_button()
-    clp.wait_url_contains(test_data.url_contain2)
-    assert test_data.url2 in page.url
-
-    acp = AddContactPage(page)
-    acp.add_contact(test_data.fn, test_data.ln, test_data.bd,
-                    test_data.eml1, test_data.pn, test_data.str1,
-                    test_data.str2, test_data.ct, test_data.stpr,
-                    test_data.pc, test_data.cntr)
-    clp.wait_url_contains(test_data.url_contain1)
-    clp.click_first_row()
-    clp.wait_url_contains(test_data.url_contain3)
-    assert test_data.url3 in page.url
     cdp = ContactDetailsPage(page)
+
+    # Ищем добавленный контакт
+    logger.info("Searching for the newly created contact...")
+    contact_name1 = "John Doe"  # Контакт, который был создан
+    row_locator1 = page.locator(f"tr.contactTableBodyRow:has-text('{contact_name1}')")
+
+    # Проверяем, что контакт найден
+    assert row_locator1 is not None, "Contact not found!"
+    row_locator1.click()
+
+    # Начинаем редактирование контакта
+    logger.info("Deleting the contact...")
+
+    # Слушаем событие диалога и автоматически подтверждаем его
+    page.on('dialog', lambda dialog: dialog.accept())  # Диалог подтверждения "OK"
+
+    # Кликаем на кнопку "Delete Contact"
     cdp.click_delete_button()
-    page.on("dialog", lambda dialog: dialog.accept())
-    cdp.wait_url_contains(test_data.url_contain1)
-    assert clp.find_row() is False
-    logger.info("Test delete contact successfully complete")
+
+    # Логируем, чтобы понять, что произошло
+    logger.info("Delete button clicked. Waiting for response...")
+
+    # Ожидаем, что контакт удалится
+    page.wait_for_timeout(2000)  # Задержка для отладки (можно увеличить, если нужно)
+
+    # Проверяем, что контакт исчез с текущей страницы
+    row_locator1 = page.locator(f"tr.contactTableBodyRow:has-text('{contact_name1}')")
+    assert row_locator1.count() == 0, "Contact not deleted from the page!"
+
+    # Проверяем, что страница вернулась на список контактов
+    assert page.url == "https://thinking-tester-contact-list.herokuapp.com/contactList", "Deletion failed!"
+    logger.info("Contact deleted and redirect successful!")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
