@@ -91,6 +91,7 @@ def test_add_contact(page):
 
     contact_list_page = ContactListPage(page)
     contact_list_page.delete_contact(contact_name)
+    logger.info("Contact successfully deleted.")
 
 
 
@@ -185,6 +186,10 @@ def test_edit_contact(page, created_contact):
     logger.info("Test edit contact successfully complete.")
     contact_list_page = ContactListPage(page)
     contact_list_page.delete_contact(updated_contact_name)
+    if updated_row_locator.is_visible():
+        contact_list_page.delete_contact(updated_contact_name)
+    logger.info("Contact successfully deleted.")
+
 
 
 @allure.severity(allure.severity_level.MINOR)
@@ -230,7 +235,8 @@ def test_cancel_edit_contact(page, created_contact):
     cdp.click_return_button()
     logger.info("Test cancel edit contact successfully complete")
     contact_list_page = ContactListPage(page)
-    contact_list_page.delete_contact(contact_name1)  # Используем метод удаления контакта
+    contact_list_page.delete_contact(contact_name1)
+    logger.info("Contact successfully deleted.")
 
 
 @allure.severity(allure.severity_level.CRITICAL)
@@ -271,7 +277,7 @@ def test_delete_contact(page, created_contact):
 
     # Проверяем, что страница вернулась на список контактов
     assert page.url == "https://thinking-tester-contact-list.herokuapp.com/contactList", "Deletion failed!"
-    logger.info("Contact deleted and redirect successful!")
+    logger.info("Contact is deleted successfully!")
 
 
 
