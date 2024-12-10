@@ -1,10 +1,14 @@
 name: Ruff
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - ForWork
   pull_request:
     types: [opened, reopened, edited, synchronize]
-    branches: [main]
+    branches: [main, ForWork]
+
 
 jobs:
   build:
