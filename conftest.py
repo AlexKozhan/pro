@@ -2,12 +2,10 @@ import uuid
 import pytest
 import allure
 from typing import Generator
-from playwright.sync_api import Browser, BrowserContext, Playwright, APIRequestContext, Page
+from playwright.sync_api import Browser, BrowserContext, Playwright, APIRequestContext
 from pages.login_page.page import LoginPage
 from config import USERNAME, PASSWORD
-from pages.contact_list_page.Contact_List_Page import ContactListPage
 from pages.add_contact_page.add_contact_page import AddContactPage
-from pages.contact_details_page.contact_details_page import ContactDetailsPage
 from Test_data import test_data
 from logger import logger
 from playwright.sync_api import sync_playwright
