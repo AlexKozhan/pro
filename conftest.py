@@ -5,6 +5,8 @@ from playwright.sync_api import Browser, BrowserContext
 from pages.login_page.page import LoginPage
 from config import USERNAME, PASSWORD
 from pages.add_contact_page.add_contact_page import AddContactPage
+from pages.contact_list_page.Contact_List_Page import ContactListPage
+from pages.contact_details_page.contact_details_page import ContactDetailsPage
 from Test_data import test_data
 from logger import logger
 # from playwright.sync_api import sync_playwright
@@ -144,3 +146,46 @@ def created_contact(page):
 def existing_email():
     """Fixture to provide an existing email for testing"""
     return "john.doe112111@example.com"
+
+
+@pytest.fixture(scope="function")
+def delete_contact_after_test(page):
+    """Фикстура для удаления контакта после теста"""
+
+    def _delete_contact(contact_name):
+        contact_list_page = ContactListPage(page)
+
+        # Ищем строку с данным контактом на странице списка
+        row_locator = page.locator(f"tr.contactTableBodyRow:has-text('{contact_name}')")
+        row_locator.wait_for(state="visible", timeout=5000)  # Убедимся, что контакт видим
+        row_locator.click()  # Кликаем по строке с контактами, чтобы перейти на его страницу
+
+        # Создаем объект для страницы деталей контакта
+        cdp = ContactDetailsPage(page)
+
+        # Логируем начало процесса удаления
+        logger.info(f"Deleting the contact: {contact_name}...")
+
+        # Слушаем событие диалога и автоматически подтверждаем его
+        page.on('dialog', lambda dialog: dialog.accept())  # Подтверждаем удаление в диалоге
+
+        # Кликаем на кнопку "Delete Contact"
+        cdp.click_delete_button()
+
+        # Ожидаем, что контакт удалится (увеличьте время, если нужно)
+        page.wait_for_timeout(5000)  # Задержка для отладки (можно увеличить)
+
+        # Проверяем, что контакт исчез с текущей страницы
+        row_locator = page.locator(f"tr.contactTableBodyRow:has-text('{contact_name}')")
+        try:
+            # Проверяем, что контакт исчез с страницы
+            row_locator.wait_for(state="detached", timeout=10000)  # Ожидаем, что элемент исчезнет с DOM
+            logger.info(f"Контакт {contact_name} успешно удален.")
+        except TimeoutError:
+            logger.error(f"Контакт {contact_name} не был удален!")
+            raise
+
+        # Проверяем, что страница вернулась на список контактов
+        assert page.url == "https://thinking-tester-contact-list.herokuapp.com/contactList", "Deletion failed!"
+
+    yield _delete_contact
