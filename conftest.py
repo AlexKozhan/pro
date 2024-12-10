@@ -1,14 +1,13 @@
 import uuid
 import pytest
 import allure
-from typing import Generator
-from playwright.sync_api import Browser, BrowserContext, Playwright, APIRequestContext
+from playwright.sync_api import Browser, BrowserContext
 from pages.login_page.page import LoginPage
 from config import USERNAME, PASSWORD
 from pages.add_contact_page.add_contact_page import AddContactPage
 from Test_data import test_data
 from logger import logger
-from playwright.sync_api import sync_playwright
+# from playwright.sync_api import sync_playwright
 
 
 # Генерация уникального email
@@ -19,7 +18,7 @@ def unique_email() -> str:
 
 
 # Настроим размеры экрана для браузера
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def browser_context_args(browser_context_args):
     return {
         **browser_context_args,
@@ -31,21 +30,21 @@ def browser_context_args(browser_context_args):
 
 
 # Фикстура для контекста браузера с сохранением состояния
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def context(create_browser_context, browser: Browser, browser_context_args: dict) -> BrowserContext:
-    context = browser.new_context(storage_state="state.json", **browser_context_args)
+    context = browser.new_context(storage_state="./state.json", **browser_context_args)
     yield context
     context.close()
 
 
 # Фикстура для страницы
-@pytest.fixture(scope="function")
-def page():
-    with sync_playwright() as p:
-        browser = p.chromium.launch()
-        page = browser.new_page()
-        yield page
-        browser.close()
+# @pytest.fixture(scope="function")
+# def page():
+#     with sync_playwright() as p:
+#         browser = p.chromium.launch()
+#         page = browser.new_page()
+#         yield page
+#         browser.close()
 
 
 # Фикстура для создания контекста и авторизации
@@ -60,18 +59,6 @@ def create_browser_context(browser) -> None:
     yield context, page
     context.storage_state(path="state.json")  # Сохраняем состояние
     context.close()
-
-
-# Фикстура для работы с API1 запросами
-@pytest.fixture(scope="session")
-def api_request_context(
-        playwright: Playwright,
-) -> Generator[APIRequestContext, None, None]:
-    request_context = playwright.request.new_context(
-        base_url="https://petstore.swagger.io/"
-    )
-    yield request_context
-    request_context.dispose()
 
 
 # Фикстура для создания контакта
@@ -151,24 +138,6 @@ def created_contact(page):
         raise
 
     return add_contact_page
-
-
-# Снимки экрана и HTML исходного кода при ошибках
-@pytest.hookimpl(tryfirst=True, hookwrapper=True)
-def pytest_runtest_makereport(item):
-    outcome = yield
-    test_result = outcome.get_result()
-    test_result.extra = []
-
-    # Если фикстура page не найдена в тесте
-    if "page" not in item.funcargs:
-        return
-
-    page = item.funcargs["page"]
-
-    if test_result.when in ["setup", "call"]:
-        xfail = hasattr(test_result, 'wasxfail')
-
 
 
 @pytest.fixture(scope="session")

@@ -1,4 +1,3 @@
-import os
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=r"C:\Users\user\Desktop\1\pro\.env.example")
