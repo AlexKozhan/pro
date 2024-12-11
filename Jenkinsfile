@@ -45,8 +45,11 @@ pipeline {
         stage('Report') {
             steps {
                 script {
-                    // Генерация отчета Allure
-                    allure results: ['allure-results'], report: 'allure-report'
+                    // Генерация отчета Allure с правильной конфигурацией
+                    allure(
+                        results: [[path: 'allure-results']],
+                        report: 'allure-report'
+                    )
                 }
             }
         }
