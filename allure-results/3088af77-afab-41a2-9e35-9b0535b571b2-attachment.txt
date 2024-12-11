@@ -1,0 +1,1 @@
+[32mINFO    [0m logger:test_api.py:503 test update contact unauthorized patch method successfully complete

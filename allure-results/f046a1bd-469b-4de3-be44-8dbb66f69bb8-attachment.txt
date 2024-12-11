@@ -1,0 +1,1 @@
+[32mINFO    [0m logger:test_auth.py:49 Test login with incorrect email successfully complete

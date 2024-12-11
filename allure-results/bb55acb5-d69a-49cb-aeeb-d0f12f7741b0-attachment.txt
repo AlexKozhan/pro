@@ -1,0 +1,1 @@
+[32mINFO    [0m logger:test_api.py:275 test get user profile successfully complete

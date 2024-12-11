@@ -3,7 +3,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/AlexKozhan/pro.git'
+                // Укажите правильный бранч
+                git branch: 'main', url: 'https://github.com/AlexKozhan/pro.git'
             }
         }
         stage('Setup') {
@@ -20,8 +21,8 @@ pipeline {
         stage('Report') {
             steps {
                 allure(
-                    results: ['allure-results'],  // Путь к результатам тестов
-                    report: 'allure-report'       // Путь для отчета
+                    results: ['allure-results'],
+                    report: 'allure-report'
                 )
             }
         }

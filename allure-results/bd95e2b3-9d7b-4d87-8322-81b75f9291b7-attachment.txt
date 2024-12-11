@@ -1,0 +1,3 @@
+[32mINFO    [0m logger:conftest.py:95 Logging in with body: {'email': 'rlzo@example.com', 'password': 'Tester11'}
+[32mINFO    [0m logger:conftest.py:107 Login response status: 200, Response body: {'user': {'_id': '67594f509f4c8d0013cc4fa8', 'firstName': 'YUml', 'lastName': 'bHewyOrg', 'email': 'rlzo@example.com', '__v': 2}, 'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzU5NGY1MDlmNGM4ZDAwMTNjYzRmYTgiLCJpYXQiOjE3MzM5MDYyNTZ9.UeP7eWX_8Km58H0_OuZq4mC0hppuTmzMiAJd5ObmDf0'}
+[32mINFO    [0m logger:test_api.py:322 test update user successfully complete

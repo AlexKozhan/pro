@@ -1,0 +1,4 @@
+[32mINFO    [0m logger:test_api.py:553 Update user: {'firstName': 'Updated', 'lastName': 'Username', 'email': 'test2@fake.com', 'password': 'myNewPassword'}, without auth token.
+[32mINFO    [0m logger:test_api.py:556 Assert actual response code: 401 with expected: 401.
+[32mINFO    [0m logger:test_api.py:559 Assert response error message: Please authenticate. with expected: 'Please authenticate'
+[32mINFO    [0m logger:test_api.py:563 test update user unauthorized successfully complete

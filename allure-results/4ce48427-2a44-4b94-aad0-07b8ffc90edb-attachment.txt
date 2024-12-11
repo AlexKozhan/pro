@@ -1,0 +1,1 @@
+[2024-12-11 09:39:17,410] INFO - Test sign up with empty fields successfully complete
