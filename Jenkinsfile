@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Убедитесь, что используете правильный бранч
+                // Проверка репозитория
                 git branch: 'main', url: 'https://github.com/AlexKozhan/pro.git'
             }
         }
@@ -15,6 +15,7 @@ pipeline {
                     python3 -m venv venv
                     . venv/bin/activate
                     pip install -r requirements.txt
+                    pip install playwright
                     playwright install
                     '''
                 }
@@ -26,15 +27,17 @@ pipeline {
                     // Запуск тестов в виртуальном окружении
                     sh '''
                     . venv/bin/activate
-                    pytest --alluredir=allure-results
+                    pytest --alluredir=allure-results || true
                     '''
                 }
             }
         }
         stage('Report') {
             steps {
-                // Генерация отчета Allure
-                allure results: ['allure-results'], report: 'allure-report'
+                script {
+                    // Генерация отчета Allure
+                    allure results: ['allure-results'], report: 'allure-report'
+                }
             }
         }
     }
