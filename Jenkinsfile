@@ -13,7 +13,7 @@ pipeline {
                     python3 -m venv venv
                     . venv/bin/activate
                     pip install -r requirements.txt
-                    sudo playwright install-deps
+                    playwright install-deps || true
                     '''
                 }
             }
