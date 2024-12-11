@@ -1,5 +1,5 @@
 """Test data module"""
-# LoginPage
+# LoginPage1
 url = "https://thinking-tester-contact-list.herokuapp.com/"
 eml = "testname@test.com"
 psw = "Tester11"
@@ -55,3 +55,6 @@ ct_1 = "Town"
 stpr_1 = "Province"
 pc_1 = "000111"
 cntr_1 = "Italy"
+
+fn3 = "John"
+ln3 = "Doe"
