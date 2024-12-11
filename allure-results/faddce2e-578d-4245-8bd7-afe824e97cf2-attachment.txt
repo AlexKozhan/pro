@@ -1,1 +1,0 @@
-[32mINFO    [0m logger:test_auth.py:95 Test login without entering credentials successfully completed

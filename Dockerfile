@@ -1,41 +1,52 @@
-FROM jenkins/jenkins:latest
+# Используем официальный образ Python
+FROM python:3.11-slim
 
-USER root
-
-# Установка необходимых пакетов
+# Устанавливаем системные зависимости
 RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    python3-venv \
     wget \
     curl \
-    gnupg \
     unzip \
-    xvfb \
-    libnss3 \
-    libatk-bridge2.0-0 \
-    libgtk-3-0 \
+    libssl-dev \
+    libffi-dev \
+    libsdl2-dev \
+    libgtk-3-dev \
+    libdbus-1-dev \
+    libxcomposite-dev \
+    libxdamage-dev \
+    libxrandr-dev \
+    libgbm-dev \
+    libasound2-dev \
+    libnss3-dev \
     libx11-xcb1 \
-    libgdk-pixbuf2.0-0 \
-    libdrm2 \
-    libgbm1 \
-    libasound2 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean
 
-# Создание виртуальной среды для Playwright
-RUN python3 -m venv /venv
+# Устанавливаем OpenJDK 17
+RUN apt-get update && apt-get install -y openjdk-17-jdk
 
-# Установка Playwright в виртуальной среде
-RUN /venv/bin/pip install playwright \
-    && /venv/bin/python -m playwright install --with-deps \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Устанавливаем переменную JAVA_HOME
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV PATH=$JAVA_HOME/bin:$PATH
 
-# Установка Allure (если нужен для отчетов)
-ARG ALLURE_VERSION="2.17.3"
-RUN wget -qO- https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz | tar -xz -C /opt/ && \
-    ln -s /opt/allure-${ALLURE_VERSION}/bin/allure /usr/bin/allure
+# Устанавливаем Playwright и необходимые библиотеки
+RUN pip install --no-cache-dir playwright==1.32.0
 
-# Возвращаемся к пользователю jenkins
-USER jenkins
+# Устанавливаем зависимости проекта
+WORKDIR /app
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Устанавливаем Playwright браузеры
+RUN python -m playwright install
+
+# Устанавливаем Allure
+RUN wget https://github.com/allure-framework/allure2/releases/download/2.18.1/allure-2.18.1.zip -O allure.zip && \
+    unzip allure.zip -d /opt/ && \
+    ln -s /opt/allure-2.18.1/bin/allure /usr/local/bin/allure && \
+    rm allure.zip
+
+# Копируем все файлы проекта в контейнер
+COPY . .
+
+# Команда для запуска тестов
+CMD ["pytest", "--maxfail=1", "--disable-warnings", "-q", "--alluredir=allure-results"]

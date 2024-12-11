@@ -1,2 +1,0 @@
-[32mINFO    [0m logger:test_api.py:581 Update user using empty body: {}.
-[32mINFO    [0m logger:test_api.py:585 Assert actual response code: 200 with expected: 400.
