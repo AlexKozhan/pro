@@ -3,23 +3,26 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/AlexKozhan/pro.git' // Укажите ваш репозиторий
+                git 'https://github.com/AlexKozhan/pro.git'
             }
         }
         stage('Setup') {
             steps {
-                sh 'pip install -r requirements.txt' // Установите зависимости, если они есть
-                sh 'playwright install' // Установка Playwright1
+                sh 'pip install -r requirements.txt'
+                sh 'playwright install'
             }
         }
         stage('Test') {
             steps {
-                sh 'pytest --headed --alluredir=allure-results' // Запуск тестов
+                sh 'pytest --alluredir=allure-results'
             }
         }
         stage('Report') {
             steps {
-                allure results: 'allure-results', report: 'allure-report' // Создание отчета Allure
+                allure(
+                    results: ['allure-results'],  // Путь к результатам тестов
+                    report: 'allure-report'       // Путь для отчета
+                )
             }
         }
     }
