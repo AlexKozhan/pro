@@ -13,7 +13,7 @@ pipeline {
                     // Создание виртуального окружения и установка зависимостей
                     sh '''
                     python3 -m venv venv
-                    source venv/bin/activate
+                    . venv/bin/activate
                     pip install -r requirements.txt
                     '''
                 }
@@ -24,7 +24,7 @@ pipeline {
                 script {
                     // Установка Playwright и его зависимостей
                     sh '''
-                    source venv/bin/activate
+                    . venv/bin/activate
                     pip install playwright
                     playwright install
                     '''
@@ -36,7 +36,7 @@ pipeline {
                 script {
                     // Запуск тестов в виртуальном окружении
                     sh '''
-                    source venv/bin/activate
+                    . venv/bin/activate
                     pytest --alluredir=allure-results || true
                     '''
                 }
