@@ -12,12 +12,23 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     unzip \
     xvfb \
+    libnss3 \
+    libatk-bridge2.0-0 \
+    libgtk-3-0 \
+    libx11-xcb1 \
+    libgdk-pixbuf2.0-0 \
+    libdrm2 \
+    libgbm1 \
+    libasound2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Установка Playwright и браузеров
-RUN pip3 install playwright \
-    && playwright install --with-deps \
+# Создание виртуальной среды для Playwright
+RUN python3 -m venv /venv
+
+# Установка Playwright в виртуальной среде
+RUN /venv/bin/pip install playwright \
+    && /venv/bin/python -m playwright install --with-deps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
