@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Report') {
             steps {
-                allure includeResults: true // Создание отчета Allure
+                allure results: 'allure-results', report: 'allure-report' // Создание отчета Allure
             }
         }
     }
