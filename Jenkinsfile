@@ -1,34 +1,26 @@
 pipeline {
     agent any
-    parameters {
-        choice(name: 'TEST_SUITE', choices: ['smoke', 'critical', 'extended', 'API', 'UI'], description: 'Choose the test suite to run')
-    }
     stages {
-        stage('Setup Environment') {
+        stage('Checkout') {
             steps {
-                script {
-                    sh '''
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip install -r requirements.txt
-                    '''
-                }
+                git 'https://github.com/AlexKozhan/pro.git' // Укажите ваш репозиторий
             }
         }
-        stage('Run Tests') {
+        stage('Setup') {
             steps {
-                script {
-                    sh """
-                        . venv/bin/activate
-                        pytest --alluredir=allure-results -m ${params.TEST_SUITE}
-                    """
-                }
+                sh 'pip install -r requirements.txt' // Установите зависимости, если они есть
+                sh 'playwright install' // Установка Playwright
             }
         }
-    }
-    post {
-        always {
-            allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+        stage('Test') {
+            steps {
+                sh 'pytest --headed --alluredir=allure-results' // Запуск тестов
+            }
+        }
+        stage('Report') {
+            steps {
+                allure includeResults: true // Создание отчета Allure
+            }
         }
     }
 }
