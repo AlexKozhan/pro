@@ -1,0 +1,43 @@
+[32mINFO    [0m logger:test_registration.py:66 Current URL: https://thinking-tester-contact-list.herokuapp.com/addUser
+[32mINFO    [0m logger:test_registration.py:67 Page content before retrieving error message:
+[32mINFO    [0m logger:test_registration.py:68 <!DOCTYPE html><html><head>
+    <title>Add User</title>
+    <link rel="icon" href="/img/thinkingTesterIcon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="main-content">
+        <h1>Add User</h1>
+        <p>Sign up to begin adding your contacts!</p>
+        <span id="error"></span>
+        <form id="add-user">
+            <p>
+                <input id="firstName" placeholder="First Name">
+            </p>
+            <p>
+                <input id="lastName" placeholder="Last Name">
+            </p>
+            <p>
+                <input id="email" placeholder="Email">
+            </p>
+            <p>
+                <input id="password" type="password" placeholder="Password">
+            </p>
+        </form>
+        <p>
+            <button id="submit" type="submit" form="add-user">Submit</button>
+            <button id="cancel" onclick="location.href='/login'">Cancel</button>
+        </p>  
+    </div>
+    <footer>
+        <p>Created by Kristin Jackvony, Copyright 2021 </p>
+        <img src="/img/thinkingTesterLogo.png">
+    </footer>
+    
+    <script src="/js/addUser.js"></script>
+
+
+</body></html>
+[32mINFO    [0m logger:test_registration.py:80 Retrieved error message: Email address is already in use
+[32mINFO    [0m logger:test_registration.py:83 Test sign up with existing email successfully complete

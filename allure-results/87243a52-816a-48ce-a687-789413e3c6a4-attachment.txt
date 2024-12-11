@@ -1,0 +1,1 @@
+[32mINFO    [0m logger:test_api.py:480 test update contact success patch method successfully complete

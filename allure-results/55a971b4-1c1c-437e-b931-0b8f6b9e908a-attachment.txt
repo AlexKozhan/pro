@@ -1,0 +1,4 @@
+[32mINFO    [0m logger:test_api.py:620 Logout user without auth token.
+[32mINFO    [0m logger:test_api.py:623 Assert actual response code: 401 with expected: 401.
+[32mINFO    [0m logger:test_api.py:626 Assert response error message: Please authenticate. with expected: 'Please authenticate'
+[32mINFO    [0m logger:test_api.py:630 test logout user unauthorized successfully complete

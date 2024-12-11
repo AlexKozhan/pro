@@ -1,0 +1,3 @@
+[32mINFO    [0m logger:test_api.py:604 Logout user using correct credentials.
+[32mINFO    [0m logger:test_api.py:607 Assert actual response code: 200 with expected: 200.
+[32mINFO    [0m logger:test_api.py:610 test logout user successfully complete

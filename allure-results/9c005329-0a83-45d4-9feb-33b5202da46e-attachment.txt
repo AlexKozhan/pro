@@ -1,0 +1,1 @@
+[32mINFO    [0m logger:test_api.py:450 test update contact success firstname successfully complete

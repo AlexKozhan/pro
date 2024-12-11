@@ -1,0 +1,4 @@
+[2024-12-11 09:37:40,368] INFO - Logout user without auth token.
+[2024-12-11 09:37:40,500] INFO - Assert actual response code: 401 with expected: 401.
+[2024-12-11 09:37:40,507] INFO - Assert response error message: Please authenticate. with expected: 'Please authenticate'
+[2024-12-11 09:37:40,515] INFO - test logout user unauthorized successfully complete

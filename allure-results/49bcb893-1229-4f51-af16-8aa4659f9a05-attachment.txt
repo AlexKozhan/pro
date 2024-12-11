@@ -1,0 +1,1 @@
+[32mINFO    [0m logger:test_api.py:202 test register user success successfully complete
