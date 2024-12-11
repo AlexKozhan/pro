@@ -1,11 +1,9 @@
-# add_contact_page/add_contact_page.py
-
 from playwright.sync_api import Page
 import logging
 from pages.add_contact_page.locators import FIRST_NAME, LAST_NAME, BIRTHDATE, EMAIL, PHONE, STREET1, STREET2, CITY, \
     STATE_PROVINCE, POSTAL_CODE, COUNTRY, SUBMIT_BUTTON, CANCEL_BUTTON, ERROR_MESSAGE
 
-# Логгер
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,11 +14,11 @@ class AddContactPage:
         """Initializes an instance of the AddContactPage class."""
         self.page = page
         self.CONTACT_ROW = page.locator(
-            "tr.contactTableBodyRow")  # Примерный селектор, замените на актуальный для вашего проекта
+            "tr.contactTableBodyRow")
 
     def wait_for_contact_to_appear(self):
         """Ожидание появления контакта в списке"""
-        self.CONTACT_ROW.wait_for(state="visible", timeout=10000)  # Ждем 10 секунд, замените на актуальный селектор
+        self.CONTACT_ROW.wait_for(state="visible", timeout=10000)
 
     def enter_first_name(self, fn):
         """Enter first name"""

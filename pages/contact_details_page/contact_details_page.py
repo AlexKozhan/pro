@@ -5,7 +5,6 @@ from pages.contact_details_page.locators import EDIT_BUTTON, DELETE_BUTTON, RETU
     BIRTHDATE, EMAIL, PHONE, STREET1, STREET2, CITY, STATE_PROVINCE, POSTAL_CODE, COUNTRY
 
 
-# Логгер
 logger = logging.getLogger(__name__)
 
 
@@ -14,6 +13,7 @@ class ContactDetailsPage(BasePage):
 
     def __init__(self, page: Page):
         """Initializes an instance of the ContactDetailsPage class."""
+        super().__init__(page)
         self.page = page
 
     def click_edit_button(self):
@@ -99,38 +99,32 @@ class ContactDetailsPage(BasePage):
 
     def confirm_delete(self):
         try:
-            # Логируем текущее состояние страницы для отладки
             logger.info(f"Page URL before confirmation: {self.page.url}")
             logger.info(f"HTML content before confirmation: {self.page.content()}")
 
-            # Является ли модальное окно доступным через текст
             confirmation_popup = self.page.locator('text="Are you sure you want to delete this contact?"')
 
-            # Увеличиваем таймаут ожидания до 20 секунд
             confirmation_popup.wait_for(state="visible", timeout=20000)
 
-            # Также можно ожидать появления кнопки в модальном окне
-            delete_button = self.page.locator('button:has-text("Delete Contact")')  # Пример кнопки
+            delete_button = self.page.locator('button:has-text("Delete Contact")')
             delete_button.wait_for(state="visible", timeout=20000)
 
-            # После появления модального окна, подтверждаем удаление
+
             delete_button.click()
 
             logger.info("Contact deletion confirmed")
         except TimeoutError:
             logger.error("Modal did not appear in time")
-            self.page.screenshot(path="timeout_error.png")  # Делает скриншот для отладки
+            self.page.screenshot(path="timeout_error.png")
             raise
 
     def cancel_delete(self):
         """Handle the cancel action on delete confirmation popup"""
         try:
-            # Ожидаем появления поп-апа, проверяя наличие текста "Are you sure you want to delete?"
             self.page.locator('text="Are you sure you want to delete this contact?"').wait_for(state="visible",
                                                                                                timeout=5000)
             logger.info("Delete confirmation popup appeared.")
 
-            # Кликаем по кнопке отмены удаления (предположим, это кнопка с текстом "Cancel")
             self.page.locator('button:has-text("Отмена")').click()
             logger.info("Clicked 'Отмена' on delete confirmation popup.")
 

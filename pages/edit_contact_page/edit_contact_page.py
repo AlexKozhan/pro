@@ -1,11 +1,9 @@
-# edit_contact_page/edit_contact_page.py
-
 from playwright.sync_api import Page
 from pages.base_page import BasePage
 from pages.edit_contact_page.locators import FIRST_NAME, LAST_NAME, BIRTHDATE, EMAIL, PHONE, STREET1, STREET2, CITY, STATE_PROVINCE, POSTAL_CODE, COUNTRY, SUBMIT_BUTTON, CANCEL_BUTTON
 import logging
 
-# Логгер
+
 logger = logging.getLogger(__name__)
 
 class EditContactPage(BasePage):
@@ -13,6 +11,7 @@ class EditContactPage(BasePage):
 
     def __init__(self, page: Page):
         """Initializes an instance of the EditContactPage class."""
+        super().__init__(page)
         self.page = page
 
     def edit_first_name(self, fn_1: str):

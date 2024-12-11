@@ -2,10 +2,9 @@ from playwright.sync_api import Page
 import logging
 from pages.base_page import BasePage
 from pages.contact_details_page.contact_details_page import ContactDetailsPage
-from pages.contact_list_page.locators import ADD_BUTTON, FIRST_ROW, LOGOUT_BUTTON, ROW_NAME, ROW_BIRTHDATE, ROW_EMAIL, \
+from pages.contact_list_page.locators import FIRST_ROW, LOGOUT_BUTTON, ROW_NAME, ROW_BIRTHDATE, ROW_EMAIL, \
     ROW_PHONE, ROW_ADDRESS, ROW_CITY, ROW_COUNTRY, CONTACT_LIST
 
-# Логгер
 logger = logging.getLogger(__name__)
 
 class ContactListPage(BasePage):
@@ -13,6 +12,7 @@ class ContactListPage(BasePage):
 
     def __init__(self, page: Page):
         """Initializes an instance of the ContactListPage class."""
+        super().__init__(page)
         self.page = page
 
     def click_add_button(self):
@@ -119,15 +119,12 @@ class ContactListPage(BasePage):
     def wait_for_contact_list_to_appear(self, timeout: int = 10000):  # Увеличьте таймаут
         """Wait for the contact list to appear on the page."""
         try:
-            # Убедитесь, что страница полностью загрузилась
             self.page.wait_for_load_state("networkidle", timeout=15000)  # Увеличьте таймаут для загрузки страницы
 
-            # Дождемся, пока элемент прикрепится к DOM
             contact_list = self.page.locator(".contacts")
             contact_list.wait_for(state="attached", timeout=timeout)  # Ждем, пока элемент будет прикреплен к DOM
             logger.info("Contact list is attached to DOM.")
 
-            # Дождемся, пока элемент станет видимым
             contact_list.wait_for(state="visible", timeout=timeout)
             logger.info("Contact list is visible.")
 
@@ -138,7 +135,6 @@ class ContactListPage(BasePage):
     def wait_for_contact_to_disappear(self, timeout: int = 5000):
         """Wait for a contact to disappear from the list (after deletion)."""
         try:
-            # Ожидаем, что контакт исчезнет
             first_row = self.page.locator(FIRST_ROW)
             first_row.wait_for(state="detached", timeout=timeout)  # Ожидаем исчезновения
             logger.info("Contact disappeared from the list.")
@@ -160,36 +156,27 @@ class ContactListPage(BasePage):
         return None
 
     def delete_contact(self, contact_name):
-        # Ищем строку с данным контактом на странице списка
         row_locator = self.page.locator(f"tr.contactTableBodyRow:has-text('{contact_name}')")
-        row_locator.wait_for(state="visible", timeout=5000)  # Убедимся, что контакт видим
-        row_locator.click()  # Кликаем по строке с контактами, чтобы перейти на его страницу
+        row_locator.wait_for(state="visible", timeout=5000)
+        row_locator.click()
 
-        # Создаем объект для страницы деталей контакта
         cdp = ContactDetailsPage(self.page)
 
-        # Логируем начало процесса удаления
         logger.info(f"Deleting the contact: {contact_name}...")
 
-        # Слушаем событие диалога и автоматически подтверждаем его
-        self.page.on('dialog', lambda dialog: dialog.accept())  # Подтверждаем удаление в диалоге
+        self.page.on('dialog', lambda dialog: dialog.accept())
 
-        # Кликаем на кнопку "Delete Contact"
         cdp.click_delete_button()
 
-        # Ожидаем, что контакт удалится (увеличьте время, если нужно)
-        self.page.wait_for_timeout(5000)  # Задержка для отладки (можно увеличить)
+        self.page.wait_for_timeout(5000)
 
-        # Проверяем, что контакт исчез с текущей страницы (проверка на списке контактов)
         row_locator = self.page.locator(f"tr.contactTableBodyRow:has-text('{contact_name}')")
         try:
-            # Проверяем, что контакт исчез с страницы
-            row_locator.wait_for(state="detached", timeout=10000)  # Ожидаем, что элемент исчезнет с DOM
+            row_locator.wait_for(state="detached", timeout=10000)
             logger.info(f"Контакт {contact_name} успешно удален.")
         except TimeoutError:
             logger.error(f"Контакт {contact_name} не был удален!")
             raise
 
-        # Проверяем, что страница вернулась на список контактов
         assert self.page.url == "https://thinking-tester-contact-list.herokuapp.com/contactList", "Deletion failed!"
 

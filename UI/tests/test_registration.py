@@ -5,8 +5,6 @@ from pages.SignUpPage.SignUpPage import SignUpPage
 import logging
 from pages.SignUpPage.locators import ERROR_ELEMENT
 
-logger = logging.getLogger(__name__)
-
 
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.critical

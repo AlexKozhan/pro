@@ -560,7 +560,6 @@ def test_login_user(api_request_context: APIRequestContext):
     logger.info("Login user using correct body.")
     response = api_request_context.post(url, data=json.dumps(body), headers=headers)
 
-    # Log response details for debugging
     logger.info(f"Response status: {response.status}")
     logger.info(f"Response body: {response.text()}")
     logger.info(f"Response headers: {response.headers}")
@@ -578,7 +577,6 @@ def test_delete_user(api_request_context: APIRequestContext, user_with_token):
     """TC012: Successful delete user"""
     url = "/users/me"
 
-    # Log the token for debugging purposes
     token = user_with_token['token']
     logger.info(f"Using token: {token}")
 
@@ -590,7 +588,6 @@ def test_delete_user(api_request_context: APIRequestContext, user_with_token):
     logger.info("Deleting user using correct authorization.")
     response = api_request_context.delete(url, headers=headers)
 
-    # Log response details for debugging
     logger.info(f"Response status: {response.status}")
     logger.info(f"Response body: {response.text()}")
     logger.info(f"Response headers: {response.headers}")

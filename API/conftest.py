@@ -66,7 +66,7 @@ def register_user(api_request_context: APIRequestContext):
     return {
         "user": response_json.get("user"),
         "token": response_json.get("token"),
-        "email": email  # Include the email in the returned dictionary
+        "email": email
     }
 
 
@@ -77,7 +77,7 @@ def user_with_token(register_user, api_request_context: APIRequestContext):
     user_info = u_data['user']
     login_body = {
         "email": user_info["email"],
-        "password": "Tester11"  # Use the same password used during registration
+        "password": "Tester11"
     }
     logger.info(f"Logging in with body: {login_body}")
 
@@ -87,7 +87,7 @@ def user_with_token(register_user, api_request_context: APIRequestContext):
             "/users/login",
             data=json.dumps(login_body),
             headers={"Content-Type": "application/json"},
-            timeout=60000  # Increase timeout to 60 seconds
+            timeout=60000
         )
 
         if response.status == 200:
@@ -97,7 +97,7 @@ def user_with_token(register_user, api_request_context: APIRequestContext):
             logger.error(f"Login failed with status: {response.status}, Response body: {response.text()}")
             if attempt < max_retries - 1:
                 logger.info("Retrying login...")
-                time.sleep(5)  # Wait for 5 seconds before retrying
+                time.sleep(5)
 
     raise Exception(f"Login failed with status: {response.status} after {max_retries} attempts")
 

@@ -9,8 +9,6 @@ from pages.contact_details_page.contact_details_page import ContactDetailsPage
 from pages.edit_contact_page.edit_contact_page import EditContactPage
 from Test_data import test_data
 from logger import logger
-
-
 import time
 
 # Create a unique suffix using current timestamp or random number
@@ -55,14 +53,10 @@ def test_add_contact(page, delete_contact_after_test):
     undefined_message = page.locator("text=undefined")
     if undefined_message.is_visible():
         logger.warning("'undefined' ошибка на странице после отправки формы, пропускаем выполнение.")
-        page.screenshot(path="error_undefined_after_submit.png")
         page.wait_for_timeout(5000)  # Подождать немного, чтобы ошибка ушла, прежде чем продолжать
 
     # Увеличиваем время ожидания, чтобы данные успели сохраниться
     page.wait_for_timeout(10000)
-
-    # Сделать снимок экрана для отладки
-    page.screenshot(path="contact_list_page_before_check.png")
 
     # Перейти обратно на страницу списка контактов
     page.goto("https://thinking-tester-contact-list.herokuapp.com/contactList")

@@ -59,7 +59,6 @@ def create_browser_context(browser) -> None:
     login_page.login(USERNAME, PASSWORD)
 
     yield context, page
-    context.storage_state(path="state.json")  # Сохраняем состояние
     context.close()
 
 
@@ -82,9 +81,6 @@ def created_contact(page):
     page.click("text='Add a New Contact'")
     page.wait_for_url("**/addContact", timeout=5000)
 
-    # Логируем текущий URL для отладки
-    logger.info(f"Current URL after clicking add button: {page.url}")
-
     # Создаём контакт
     add_contact_page = AddContactPage(page)
     add_contact_page.add_contact(
@@ -101,14 +97,10 @@ def created_contact(page):
     undefined_message = page.locator("text=undefined")
     if undefined_message.is_visible():
         logger.warning("'undefined' ошибка на странице после отправки формы, пропускаем выполнение.")
-        page.screenshot(path="error_undefined_after_submit.png")
         page.wait_for_timeout(5000)  # Подождать немного, чтобы ошибка ушла, прежде чем продолжать
 
     # Увеличиваем время ожидания, чтобы данные успели сохраниться
     page.wait_for_timeout(10000)
-
-    # Сделать снимок экрана для отладки
-    page.screenshot(path="contact_list_page_before_check.png")
 
     # Перейти обратно на страницу списка контактов
     page.goto("https://thinking-tester-contact-list.herokuapp.com/contactList")
@@ -136,7 +128,6 @@ def created_contact(page):
         logger.info(f"Контакт {contact_name} успешно добавлен.")
     except TimeoutError:
         logger.error(f"Контакт {contact_name} не найден на странице.")
-        page.screenshot(path="contact_not_found_error.png")
         raise
 
     return add_contact_page

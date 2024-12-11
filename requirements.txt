@@ -5,5 +5,4 @@ ruff
 pylint
 pytest
 allure-pytest
-requests
 playwright

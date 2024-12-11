@@ -41,7 +41,6 @@ class LoginPage(BasePage):
     def is_error_message_visible(self) -> bool:
         """Check if error message appears (for invalid login attempts)."""
         try:
-            # Ожидаем появления сообщения об ошибке с тайм-аутом
             self.ERROR_MESSAGE.wait_for(state="visible", timeout=10000)
             print("Error message is visible.")
             return True
