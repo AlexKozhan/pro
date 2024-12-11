@@ -1,1 +1,0 @@
-[32mINFO    [0m logger:test_api.py:387 test update contact bad request put method successfully complete

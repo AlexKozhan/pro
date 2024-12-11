@@ -1,1 +1,0 @@
-[2024-12-11 09:39:18,020] INFO - Test cancel sign up successfully complete

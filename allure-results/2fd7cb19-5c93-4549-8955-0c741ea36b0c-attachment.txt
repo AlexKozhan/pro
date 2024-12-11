@@ -1,5 +1,0 @@
-[32mINFO    [0m logger:test_contactss.py:75 Всего строк найдено: 8
-[32mINFO    [0m logger:test_contactss.py:82 Контакт First_1733906251 Last_1733906251 успешно добавлен.
-[32mINFO    [0m logger:conftest.py:167 Deleting the contact: First_1733906251 Last_1733906251...
-[32mINFO    [0m logger:conftest.py:182 Контакт First_1733906251 Last_1733906251 успешно удален.
-[32mINFO    [0m logger:test_contactss.py:90 Contact successfully deleted.

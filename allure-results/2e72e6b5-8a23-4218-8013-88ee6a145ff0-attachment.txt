@@ -1,3 +1,0 @@
-[32mINFO    [0m logger:test_contactss.py:115 Current URL after clicking add button: https://thinking-tester-contact-list.herokuapp.com/addContact
-[32mINFO    [0m logger:test_contactss.py:126 Current URL after clicking cancel button: https://thinking-tester-contact-list.herokuapp.com/contactList
-[32mINFO    [0m logger:test_contactss.py:130 Test cancel add contact successfully complete
