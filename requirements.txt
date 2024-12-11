@@ -6,3 +6,4 @@ pylint
 pytest
 allure-pytest
 playwright
+pytest-playwright==0.5.2
