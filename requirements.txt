@@ -1,9 +1,4 @@
-flake8
-pycodestyle
-mypy
-ruff
 pylint
 pytest
 allure-pytest
-playwright
 pytest-playwright==0.5.2
