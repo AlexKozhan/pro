@@ -1,16 +1,26 @@
 from playwright.sync_api import Page
 from pages.base_page import BasePage
-from pages.edit_contact_page.locators import FIRST_NAME, LAST_NAME, BIRTHDATE, EMAIL, PHONE, STREET1, STREET2, CITY, STATE_PROVINCE, POSTAL_CODE, COUNTRY, SUBMIT_BUTTON, CANCEL_BUTTON
+from pages.edit_contact_page.locators import (FIRST_NAME,
+                                              LAST_NAME,
+                                              BIRTHDATE, EMAIL,
+                                              PHONE, STREET1,
+                                              STREET2, CITY,
+                                              STATE_PROVINCE,
+                                              POSTAL_CODE, COUNTRY,
+                                              SUBMIT_BUTTON,
+                                              CANCEL_BUTTON)
 import logging
 
 
 logger = logging.getLogger(__name__)
 
+
 class EditContactPage(BasePage):
     """Class for editing contact page"""
 
     def __init__(self, page: Page):
-        """Initializes an instance of the EditContactPage class."""
+        """Initializes an instance of the
+        EditContactPage class."""
         super().__init__(page)
         self.page = page
 
@@ -92,8 +102,10 @@ class EditContactPage(BasePage):
         btn = self.page.locator(CANCEL_BUTTON)
         btn.click()
 
-    def edit_contact(self, fn_1: str, ln_1: str, bd_1: str, eml1_1: str, pn_1: str, str1_1: str,
-                     str2_1: str, ct_1: str, stpr_1: str, pc_1: str, cntr_1: str):
+    def edit_contact(self, fn_1: str, ln_1: str, bd_1: str,
+                     eml1_1: str, pn_1: str, str1_1: str,
+                     str2_1: str, ct_1: str, stpr_1: str,
+                     pc_1: str, cntr_1: str):
         """Edit contact"""
         self.edit_first_name(fn_1)
         self.edit_last_name(ln_1)
@@ -110,7 +122,8 @@ class EditContactPage(BasePage):
 
     def find_contact_by_name(self, first_name, last_name):
         """
-        Finds a contact in the contact list by first name and last name.
+        Finds a contact in the contact list by first name
+        and last name.
         Returns the row element if found, otherwise None.
         """
         rows = self.page.locator("table.contactTable tbody tr")

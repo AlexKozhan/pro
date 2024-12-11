@@ -13,8 +13,10 @@ user_data = {
     "password": "sangvin123"
 }
 
+
 @pytest.fixture(scope="session")
-def api_request_context(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
+def api_request_context(playwright: Playwright) -> (
+        Generator)[APIRequestContext, None, None]:
     request_context = playwright.request.new_context(base_url=MAIN_URL)
     yield request_context
     request_context.dispose()
@@ -23,13 +25,17 @@ def api_request_context(playwright: Playwright) -> Generator[APIRequestContext, 
 @pytest.fixture(scope="session")
 def auth_token(api_request_context: APIRequestContext):
     """Login as user and get token."""
-    response = api_request_context.post("/users/login", data=json.dumps(user_data), headers={"Content-Type": "application/json"})
+    response = (api_request_context.
+                post("/users/login", data=json.dumps(user_data),
+                     headers={"Content-Type": "application/json"}))
     if response.status == 200:
         return response.json().get("token")
     else:
         # Log the response details for debugging
-        print(f"Authorization failed: {response.status}, {response.text()}")
-        raise RuntimeError(f"Ошибка авторизации: {response.status}, {response.text()}")
+        print(f"Authorization failed: {response.status}, "
+              f"{response.text()}")
+        raise RuntimeError(f"Ошибка авторизации: "
+                           f"{response.status}, {response.text()}")
 
 @pytest.fixture(scope="session")
 def base_url():
@@ -37,20 +43,24 @@ def base_url():
     return MAIN_URL
 
 @pytest.fixture(scope="function")
-def cleanup_contacts(auth_token, api_request_context: APIRequestContext):
+def cleanup_contacts(auth_token, api_request_context:
+APIRequestContext):
     """Fixture delete contacts after tests"""
     yield
     headers = {"Authorization": f"Bearer {auth_token}"}
-    response = api_request_context.get("/contacts", headers=headers)
+    response = api_request_context.get("/contacts",
+                                       headers=headers)
     contacts = response.json()
 
     for contact in contacts:
         contact_id = contact["_id"]
-        api_request_context.delete(f"/contacts/{contact_id}", headers=headers)
+        api_request_context.delete(f"/contacts/{contact_id}",
+                                   headers=headers)
 
 @pytest.fixture(scope="function")
 def register_user(api_request_context: APIRequestContext):
-    """Fixture to register a user and return user details including email."""
+    """Fixture to register a user and return user
+    details including email."""
     url = "/users"
     first_name = generate_string(3, 6)
     last_name = generate_string(5, 10)
@@ -61,7 +71,9 @@ def register_user(api_request_context: APIRequestContext):
         "email": email,
         "password": "Tester11"
     }
-    response = api_request_context.post(url, data=json.dumps(body), headers={"Content-Type": "application/json"})
+    response = (api_request_context.post
+                (url, data=json.dumps(body),
+                 headers={"Content-Type": "application/json"}))
     response_json = response.json()
     return {
         "user": response_json.get("user"),
@@ -71,7 +83,8 @@ def register_user(api_request_context: APIRequestContext):
 
 
 @pytest.fixture(scope="function")
-def user_with_token(register_user, api_request_context: APIRequestContext):
+def user_with_token(register_user, api_request_context:
+APIRequestContext):
     """Register user and get token."""
     u_data = register_user
     user_info = u_data['user']
@@ -91,15 +104,18 @@ def user_with_token(register_user, api_request_context: APIRequestContext):
         )
 
         if response.status == 200:
-            logger.info(f"Login response status: {response.status}, Response body: {response.json()}")
+            logger.info(f"Login response status: {response.status}, "
+                        f"Response body: {response.json()}")
             return response.json()
         else:
-            logger.error(f"Login failed with status: {response.status}, Response body: {response.text()}")
+            logger.error(f"Login failed with status: {response.status}, "
+                         f"Response body: {response.text()}")
             if attempt < max_retries - 1:
                 logger.info("Retrying login...")
                 time.sleep(5)
 
-    raise Exception(f"Login failed with status: {response.status} after {max_retries} attempts")
+    raise Exception(f"Login failed with status: {response.status} "
+                    f"after {max_retries} attempts")
 
 @pytest.fixture(scope="function")
 def created_contact(auth_token, api_request_context: APIRequestContext):
@@ -122,7 +138,9 @@ def created_contact(auth_token, api_request_context: APIRequestContext):
         "country": "USA"
     }
 
-    response = api_request_context.post("/contacts", data=json.dumps(body), headers=headers)
+    response = api_request_context.post("/contacts",
+                                        data=json.dumps(body),
+                                        headers=headers)
     data = response.json()
     contact_id = data["_id"]
     return contact_id

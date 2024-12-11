@@ -2,7 +2,6 @@
 import pytest
 import allure
 from pages.login_page.page import LoginPage
-from pages.contact_list_page.Contact_List_Page import ContactListPage
 from config import USERNAME, PASSWORD
 from pages.add_contact_page.add_contact_page import AddContactPage
 from pages.contact_details_page.contact_details_page import ContactDetailsPage
@@ -17,7 +16,6 @@ test_data.fn = f"First_{unique_suffix}"
 test_data.ln = f"Last_{unique_suffix}"
 
 
-
 @allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.critical
 @pytest.mark.UI
@@ -28,8 +26,10 @@ def test_add_contact(page, delete_contact_after_test):
     # Ждем окончания сетевой активности (если нужно)
     page.wait_for_load_state("networkidle", timeout=10000)
     # Последняя проверка на URL
-    assert page.url == "https://thinking-tester-contact-list.herokuapp.com/contactList", \
-        f"Expected URL: https://thinking-tester-contact-list.herokuapp.com/contactList, but got: {page.url}"
+    assert page.url == ("https://thinking-tester-contact-list"
+                        ".herokuapp.com/contactList"), \
+        (f"Expected URL: https://thinking-tester-contact-list"
+         f".herokuapp.com/contactList, but got: {page.url}")
 
     # Клик по кнопке "Добавить контакт"
     page.wait_for_selector("text='Add a New Contact'", timeout=5000)
@@ -52,19 +52,22 @@ def test_add_contact(page, delete_contact_after_test):
     # Проверка ошибки 'undefined' на странице после отправки формы
     undefined_message = page.locator("text=undefined")
     if undefined_message.is_visible():
-        logger.warning("'undefined' ошибка на странице после отправки формы, пропускаем выполнение.")
-        page.wait_for_timeout(5000)  # Подождать немного, чтобы ошибка ушла, прежде чем продолжать
+        logger.warning("'undefined' ошибка на странице после "
+                       "отправки формы, пропускаем выполнение.")
+        page.wait_for_timeout(5000)
 
     # Увеличиваем время ожидания, чтобы данные успели сохраниться
     page.wait_for_timeout(10000)
 
     # Перейти обратно на страницу списка контактов
-    page.goto("https://thinking-tester-contact-list.herokuapp.com/contactList")
+    page.goto("https://thinking-tester-contact-list"
+              ".herokuapp.com/contactList")
     page.wait_for_load_state("networkidle", timeout=30000)
 
     # Проверить наличие добавленного контакта
     contact_name = f"{test_data.fn} {test_data.ln}"
-    row_locator = page.locator(f"tr.contactTableBodyRow:has-text('{contact_name}')")
+    row_locator = page.locator(f"tr.contactTableBodyRow:"
+                               f"has-text('{contact_name}')")
 
     # Логирование количества строк
     all_rows = page.locator("tr.contactTableBodyRow")
@@ -98,8 +101,10 @@ def test_cancel_add_contact(page):
     # Ждем окончания сетевой активности (если нужно)
     page.wait_for_load_state("networkidle", timeout=10000)
     # Последняя проверка на URL
-    assert page.url == "https://thinking-tester-contact-list.herokuapp.com/contactList", \
-        f"Expected URL: https://thinking-tester-contact-list.herokuapp.com/contactList, but got: {page.url}"
+    assert page.url == ("https://thinking-tester-contact-list"
+                        ".herokuapp.com/contactList"), \
+        (f"Expected URL: https://thinking-tester-contact-list"
+         f".herokuapp.com/contactList, but got: {page.url}")
 
     # Клик по кнопке "Добавить контакт"
     page.wait_for_selector("text='Add a New Contact'", timeout=5000)
@@ -110,7 +115,9 @@ def test_cancel_add_contact(page):
     logger.info(f"Current URL after clicking add button: {page.url}")
 
     # Check if the URL contains the expected substring
-    assert test_data.url_contain2 in page.url, f"Expected URL to contain {test_data.url_contain2}, but got {page.url}"
+    assert test_data.url_contain2 in page.url, \
+        (f"Expected URL to contain {test_data.url_contain2}, "
+         f"but got {page.url}")
 
     acp = AddContactPage(page)
     acp.click_cancel_button()
@@ -118,7 +125,8 @@ def test_cancel_add_contact(page):
     # Log current URL for debugging
     logger.info(f"Current URL after clicking cancel button: {page.url}")
 
-    assert test_data.url1 in page.url, f"Expected URL to be {test_data.url1}, but got {page.url}"
+    assert test_data.url1 in page.url, \
+        f"Expected URL to be {test_data.url1}, but got {page.url}"
     logger.info("Test cancel add contact successfully complete")
 
 
@@ -132,7 +140,8 @@ def test_edit_contact(page, created_contact, delete_contact_after_test):
     # Ищем добавленный контакт
     logger.info("Searching for the newly created contact...")
     contact_name1 = "John Doe"  # Контакт, который был создан
-    row_locator1 = page.locator(f"tr.contactTableBodyRow:has-text('{contact_name1}')")
+    row_locator1 = page.locator(f"tr.contactTableBodyRow:"
+                                f"has-text('{contact_name1}')")
 
     # Проверяем, что контакт найден
     assert row_locator1 is not None, "Contact not found!"
@@ -158,18 +167,21 @@ def test_edit_contact(page, created_contact, delete_contact_after_test):
     )
 
     # Переходим обратно на страницу списка контактов
-    page.goto("https://thinking-tester-contact-list.herokuapp.com/contactList")
+    page.goto("https://thinking-tester-contact-list"
+              ".herokuapp.com/contactList")
     page.wait_for_load_state("networkidle", timeout=10000)
 
     # Проверяем, что контакт был успешно обновлён
     logger.info("Verifying the updated contact...")
     updated_contact_name = "Jane Smith"  # Новый контакт
-    updated_row_locator = page.locator(f"tr.contactTableBodyRow:has-text('{updated_contact_name}')")
+    updated_row_locator = (
+        page.locator(f"tr.contactTableBodyRow:has-text('{updated_contact_name}')"))
 
     # Убедиться, что обновлённый контакт видим
     try:
         updated_row_locator.wait_for(state="visible", timeout=30000)
-        assert updated_row_locator.is_visible(), f"Updated contact {updated_contact_name} not found!"
+        assert updated_row_locator.is_visible(), \
+            f"Updated contact {updated_contact_name} not found!"
         logger.info(f"Contact {contact_name1} successfully updated.")
     except TimeoutError:
         logger.error(f"Updated contact {updated_contact_name} not found!")
@@ -187,14 +199,16 @@ def test_edit_contact(page, created_contact, delete_contact_after_test):
 @allure.severity(allure.severity_level.MINOR)
 @pytest.mark.extended
 @pytest.mark.UI
-def test_cancel_edit_contact(page, created_contact, delete_contact_after_test):
+def test_cancel_edit_contact(page, created_contact,
+                             delete_contact_after_test):
     """Test cancel edit contact successfully"""
     ecp = EditContactPage(page)
 
     # Ищем добавленный контакт
     logger.info("Searching for the newly created contact...")
     contact_name1 = "John Doe"  # Контакт, который был создан
-    row_locator1 = page.locator(f"tr.contactTableBodyRow:has-text('{contact_name1}')")
+    row_locator1 = (page.locator
+                    (f"tr.contactTableBodyRow:has-text('{contact_name1}')"))
 
     # Проверяем, что контакт найден
     assert row_locator1 is not None, "Contact not found!"
@@ -207,11 +221,12 @@ def test_cancel_edit_contact(page, created_contact, delete_contact_after_test):
     ecp.click_cancel_button()
 
     # Ожидаем появления элемента с id="firstName"
-    ecp.page.locator("span#firstName").wait_for(timeout=5000)  # ожидание до 5 секунд
+    ecp.page.locator("span#firstName").wait_for(timeout=5000)
 
     # Получаем текущее значение поля firstName и проверяем его
-    current_value = ecp.page.locator("span#firstName").text_content()  # Получаем текст из span
-    assert current_value == 'John', f"Expected 'John', but got {current_value}"
+    current_value = ecp.page.locator("span#firstName").text_content()
+    assert current_value == 'John', (f"Expected 'John', "
+                                     f"but got {current_value}")
 
     expected_result = [
         "John", "Doe", "1990-01-01",
@@ -241,7 +256,8 @@ def test_delete_contact(page, created_contact):
     # Ищем добавленный контакт
     logger.info("Searching for the newly created contact...")
     contact_name1 = "John Doe"  # Контакт, который был создан
-    row_locator1 = page.locator(f"tr.contactTableBodyRow:has-text('{contact_name1}')")
+    row_locator1 = (
+        page.locator(f"tr.contactTableBodyRow:has-text('{contact_name1}')"))
 
     # Проверяем, что контакт найден
     assert row_locator1 is not None, "Contact not found!"
@@ -251,7 +267,7 @@ def test_delete_contact(page, created_contact):
     logger.info("Deleting the contact...")
 
     # Слушаем событие диалога и автоматически подтверждаем его
-    page.on('dialog', lambda dialog: dialog.accept())  # Диалог подтверждения "OK"
+    page.on('dialog', lambda dialog: dialog.accept())
 
     # Кликаем на кнопку "Delete Contact"
     cdp.click_delete_button()
@@ -260,31 +276,13 @@ def test_delete_contact(page, created_contact):
     logger.info("Delete button clicked. Waiting for response...")
 
     # Ожидаем, что контакт удалится
-    page.wait_for_timeout(2000)  # Задержка для отладки (можно увеличить, если нужно)
+    page.wait_for_timeout(2000)
 
     # Проверяем, что контакт исчез с текущей страницы
     row_locator1 = page.locator(f"tr.contactTableBodyRow:has-text('{contact_name1}')")
     assert row_locator1.count() == 0, "Contact not deleted from the page!"
 
     # Проверяем, что страница вернулась на список контактов
-    assert page.url == "https://thinking-tester-contact-list.herokuapp.com/contactList", "Deletion failed!"
+    assert page.url == ("https://thinking-tester-contact-list"
+                        ".herokuapp.com/contactList"), "Deletion failed!"
     logger.info("Contact is deleted successfully!")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

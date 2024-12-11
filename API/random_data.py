@@ -13,4 +13,5 @@ def generate_string(min_length, max_length):
 def generate_email():
     """Random email"""
     domains = ["example.com", "test.com", "mail.com"]
-    return f"{generate_string(4, 10)}@{random.choice(domains)}"
+    return (f"{generate_string(4, 10)}@"
+            f"{random.choice(domains)}")
