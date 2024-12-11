@@ -9,7 +9,7 @@ pipeline {
         stage('Setup') {
             steps {
                 sh 'pip install -r requirements.txt' // Установите зависимости, если они есть
-                sh 'playwright install' // Установка Playwright
+                sh 'playwright install' // Установка Playwright1
             }
         }
         stage('Test') {
