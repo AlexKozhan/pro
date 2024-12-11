@@ -9,7 +9,6 @@ on:
     types: [opened, reopened, edited, synchronize]
     branches: [main, ForWork]
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,11 +26,4 @@ jobs:
         run: mkdir -p .mypy_cache/
       - name: Analysing the code with mypy
         run: |
-          mypy \
-            --ignore-missing-imports \
-            --install-types \
-            --non-interactive \
-            --exclude venv \
-            --cache-dir=.mypy_cache/ \
-            --disable-error-code misc,var-annotated \
-            .
+          mypy --config-file mypy.ini .
