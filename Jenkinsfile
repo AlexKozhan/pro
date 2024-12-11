@@ -10,24 +10,25 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
-                    // Создание виртуального окружения
-                    sh 'python3 -m venv venv'
-
-                    // Активация виртуального окружения
-                    sh '. venv/bin/activate'
-
-                    // Установка зависимостей в виртуальное окружение
-                    sh 'pip install -r requirements.txt'
-
-                    // Установка Playwright
-                    sh 'playwright install'
+                    // Создание виртуального окружения и установка зависимостей
+                    sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install -r requirements.txt
+                    playwright install
+                    '''
                 }
             }
         }
         stage('Test') {
             steps {
-                // Запуск тестов
-                sh '. venv/bin/activate && pytest --alluredir=allure-results'
+                script {
+                    // Запуск тестов в виртуальном окружении
+                    sh '''
+                    . venv/bin/activate
+                    pytest --alluredir=allure-results
+                    '''
+                }
             }
         }
         stage('Report') {
