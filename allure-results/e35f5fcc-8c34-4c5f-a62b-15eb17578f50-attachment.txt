@@ -1,0 +1,1 @@
+INFO     logger:test_api.py:228 test add user email already in use successfully complete

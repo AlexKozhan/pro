@@ -1,0 +1,1 @@
+INFO     logger:test_api.py:254 test add user incorrect body successfully complete

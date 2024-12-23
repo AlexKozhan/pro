@@ -1,0 +1,10 @@
+[2024-12-11 12:10:07,724] INFO - Current URL after adding contact: https://thinking-tester-contact-list.herokuapp.com/contactList
+[2024-12-11 12:10:07,728] INFO - Returned to the contact list page successfully.
+[2024-12-11 12:10:07,742] INFO - Всего строк найдено: 8
+[2024-12-11 12:10:07,759] INFO - Контакт John Doe успешно добавлен.
+[2024-12-11 12:10:07,760] INFO - Searching for the newly created contact...
+[2024-12-11 12:10:07,918] INFO - Editing the contact...
+[2024-12-11 12:10:09,056] INFO - Test cancel edit contact successfully complete
+[2024-12-11 12:10:09,537] INFO - Deleting the contact: John Doe...
+[2024-12-11 12:10:14,720] INFO - Контакт John Doe успешно удален.
+[2024-12-11 12:10:14,720] INFO - Contact successfully deleted.

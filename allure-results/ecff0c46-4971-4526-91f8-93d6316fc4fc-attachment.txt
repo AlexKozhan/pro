@@ -1,0 +1,1 @@
+INFO     logger:test_registration.py:21 Test successful sign up successfully complete

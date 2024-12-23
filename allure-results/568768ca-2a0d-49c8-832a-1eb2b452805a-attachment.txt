@@ -1,0 +1,1 @@
+INFO     logger:test_api.py:521 test delete contact successfully complete

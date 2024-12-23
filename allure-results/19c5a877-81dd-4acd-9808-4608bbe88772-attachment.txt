@@ -1,0 +1,1 @@
+INFO     logger:test_auth.py:63 Test login with incorrect password successfully complete

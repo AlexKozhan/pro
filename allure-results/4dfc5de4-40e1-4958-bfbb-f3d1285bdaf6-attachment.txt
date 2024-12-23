@@ -1,0 +1,1 @@
+INFO     logger:test_registration.py:107 Test sign up with empty fields successfully complete

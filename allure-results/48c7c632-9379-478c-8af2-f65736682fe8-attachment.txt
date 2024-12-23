@@ -1,0 +1,1 @@
+Retrieved error message: User validation failed: email: Email is invalid, password: Path `password` (`w1`) is shorter than the minimum allowed length (7).

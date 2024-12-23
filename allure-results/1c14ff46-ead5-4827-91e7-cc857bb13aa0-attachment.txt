@@ -1,0 +1,1 @@
+INFO     logger:test_api.py:155 test get contact list successfully complete

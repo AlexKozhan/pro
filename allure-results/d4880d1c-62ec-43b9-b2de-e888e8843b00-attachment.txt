@@ -1,0 +1,1 @@
+INFO     logger:test_api.py:28 test delete user unauthorized successfully complete

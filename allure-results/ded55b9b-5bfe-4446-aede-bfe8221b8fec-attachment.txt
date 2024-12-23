@@ -1,0 +1,3 @@
+[2024-12-11 12:08:39,429] INFO - Logging in with body: {'email': 'inlijfmx@example.com', 'password': 'Tester11'}
+[2024-12-11 12:08:39,957] INFO - Login response status: 200, Response body: {'user': {'_id': '675980c8a98bc80013e6a641', 'firstName': 'rcbuxZ', 'lastName': 'RevtaVlwRc', 'email': 'inlijfmx@example.com', '__v': 2}, 'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzU5ODBjOGE5OGJjODAwMTNlNmE2NDEiLCJpYXQiOjE3MzM5MTg5MjF9.-r2BldLi9wIvDpo8_JDzK354c7jfCNIKdH2FHDhphPI'}
+[2024-12-11 12:08:40,452] INFO - test update user successfully complete
