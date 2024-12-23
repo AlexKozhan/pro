@@ -1,0 +1,1 @@
+INFO     logger:test_api.py:96 test add contact unauthorized successfully complete

@@ -1,0 +1,41 @@
+INFO     logger:test_registration.py:36 Current URL: https://thinking-tester-contact-list.herokuapp.com/addUser
+INFO     logger:test_registration.py:37 Page content before waiting for error message:
+INFO     logger:test_registration.py:38 <!DOCTYPE html><html><head>
+    <title>Add User</title>
+    <link rel="icon" href="/img/thinkingTesterIcon.png">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="main-content">
+        <h1>Add User</h1>
+        <p>Sign up to begin adding your contacts!</p>
+        <span id="error"></span>
+        <form id="add-user">
+            <p>
+                <input id="firstName" placeholder="First Name">
+            </p>
+            <p>
+                <input id="lastName" placeholder="Last Name">
+            </p>
+            <p>
+                <input id="email" placeholder="Email">
+            </p>
+            <p>
+                <input id="password" type="password" placeholder="Password">
+            </p>
+        </form>
+        <p>
+            <button id="submit" type="submit" form="add-user">Submit</button>
+            <button id="cancel" onclick="location.href='/login'">Cancel</button>
+        </p>  
+    </div>
+    <footer>
+        <p>Created by Kristin Jackvony, Copyright 2021 </p>
+        <img src="/img/thinkingTesterLogo.png">
+    </footer>
+    
+    <script src="/js/addUser.js"></script>
+
+
+</body></html>

@@ -1,0 +1,1 @@
+INFO     logger:test_api.py:291 test get user profile unauthorized successfully complete

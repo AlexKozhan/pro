@@ -1,0 +1,4 @@
+[2024-12-11 12:08:56,509] INFO - Update user: {'firstName': 'Updated', 'lastName': 'Username', 'email': 'test2@fake.com', 'password': 'myNewPassword'}, without auth token.
+[2024-12-11 12:08:57,002] INFO - Assert actual response code: 401 with expected: 401.
+[2024-12-11 12:08:57,005] INFO - Assert response error message: Please authenticate. with expected: 'Please authenticate'
+[2024-12-11 12:08:57,008] INFO - test update user unauthorized successfully complete

@@ -1,0 +1,1 @@
+INFO     logger:test_api.py:132 test add contact bad request successfully complete

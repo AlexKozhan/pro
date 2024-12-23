@@ -1,0 +1,2 @@
+[2024-12-11 12:08:57,024] INFO - Update user using empty body: {}.
+[2024-12-11 12:08:57,497] INFO - Assert actual response code: 200 with expected: 400.

@@ -1,0 +1,5 @@
+INFO     logger:test_contactss.py:75 Всего строк найдено: 8
+INFO     logger:test_contactss.py:82 Контакт First_1733918909 Last_1733918909 успешно добавлен.
+INFO     logger:conftest.py:167 Deleting the contact: First_1733918909 Last_1733918909...
+INFO     logger:conftest.py:182 Контакт First_1733918909 Last_1733918909 успешно удален.
+INFO     logger:test_contactss.py:90 Contact successfully deleted.

@@ -1,0 +1,1 @@
+INFO     logger:test_registration.py:126 Test cancel sign up successfully complete
